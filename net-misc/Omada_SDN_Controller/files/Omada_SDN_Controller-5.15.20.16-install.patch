@@ -1,0 +1,60 @@
+diff '--color=auto' -ur a/bin/control.sh b/bin/control.sh
+--- a/bin/control.sh	2025-03-18 02:33:08.000000000 +0100
++++ b/bin/control.sh	2025-03-30 21:35:49.248048032 +0200
+@@ -28,7 +28,7 @@
+ MAIN_CLASS="com.tplink.smb.omada.starter.OmadaLinuxMain"
+ STARTUP_INFO_PATH="${OMADA_HOME}/data/startupInfo"
+ 
+-OMADA_USER=${OMADA_USER:-root}
++OMADA_USER=${OMADA_USER:-omada}
+ OMADA_GROUP=$(id -gn ${OMADA_USER})
+ 
+ PID_FILE="/var/run/${NAME}.pid"
+@@ -82,7 +82,7 @@
+ }
+ 
+ # root permission check
+-check_root_perms
++# check_root_perms
+ 
+ # JSVC - for running java apps as services
+ JSVC=$(command -v jsvc)
+Only in b: install.patch
+diff '--color=auto' -ur a/install.sh b/install.sh
+--- a/install.sh	2025-03-18 02:33:08.000000000 +0100
++++ b/install.sh	2025-03-30 18:34:24.472054519 +0200
+@@ -2,18 +2,19 @@
+ NAME="omada"
+ DESC="Omada Controller"
+ 
+-DEST_DIR=/opt/tplink
+-DEST_FOLDER=EAPController
++PREFIX_DIR=$1
++DEST_DIR=${PREFIX_DIR}/opt/
++DEST_FOLDER=OmadaController
+ INSTALLDIR=${DEST_DIR}/${DEST_FOLDER}
+ DATA_DIR="${INSTALLDIR}/data"
+-LINK=/etc/init.d/tpeap
+-LINK_CMD=/usr/bin/tpeap
+-CLUSTER_LINK_CMD=/usr/bin/omadacluster
++LINK=${PREFIX_DIR}/etc/init.d/tpeap
++LINK_CMD=${PREFIX_DIR}/usr/bin/tpeap
++CLUSTER_LINK_CMD=${PREFIX_DIR}/usr/bin/omadacluster
+ 
+ CLUSTER_DIR="${DATA_DIR}/cluster"
+ BACKUP_DIR=${INSTALLDIR}/../omada_db_backup
+ DB_FILE_NAME=omada.db.tar.gz
+-INSTALL_PARAM=$1
++INSTALL_PARAM="-y"
+ CONSULT_IMPORT_DB=1
+ INIT_CLUSTER=0
+ 
+@@ -219,7 +220,7 @@
+ 
+ # parameter check
+ if [[ $# != 0 ]] ; then
+-    if [[ $# != 1 || $1 != "init-cluster-mode" || $1 == "help" ]] ; then
++    if [[ $# != 1 || $1 == "help" ]] ; then
+         help
+         exit
+     fi
