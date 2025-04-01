@@ -12,7 +12,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 IUSE=""
 
-RESTRICT="test"
+RESTRICT="test strip"
 
 RDEPEND="
 	>=virtual/jre-1.17:*
@@ -28,12 +28,19 @@ PATCHES=(
     "${FILESDIR}"/${P}-install.patch
 )
 
-INSTALL_OMADA_DIR="${ED}/opt/OmadaController"
+INSTALL_OMADA_DIR="/opt/OmadaController"
 
 src_install() {
+	doinitd "${FILESDIR}"/omada
+	fperms 755 /etc/init.d/omada
+	dodir /usr/bin
 	./install.sh ${ED}
 	keepdir ${INSTALL_OMADA_DIR}/work
+	keepdir ${INSTALL_OMADA_DIR}/logs
+	keepdir ${INSTALL_OMADA_DIR}/data/db
 	fowners omada:omada ${INSTALL_OMADA_DIR}/data
+	fowners omada:omada ${INSTALL_OMADA_DIR}/data/db
 	fowners omada:omada ${INSTALL_OMADA_DIR}/logs
 	fowners omada:omada ${INSTALL_OMADA_DIR}/work
+	fowners omada:omada ${INSTALL_OMADA_DIR}/properties/omada.properties
 }

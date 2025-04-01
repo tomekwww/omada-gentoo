@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting ${SVCNAME}"
+	/opt/OmadaController/bin/control.sh start
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	/opt/OmadaController/bin/control.sh stop
+	eend $?
+}
