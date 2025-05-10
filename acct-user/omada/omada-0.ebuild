@@ -7,7 +7,7 @@ inherit acct-user
 
 DESCRIPTION="OmadaSNController program user"
 ACCT_USER_ID=704
-ACCT_USER_GROUPS=( omada )
+ACCT_USER_GROUPS=( ${PN} )
 ACCT_USER_HOME=/opt/OmadaController
 ACCT_USER_HOME_PERMS=0700
 ACCT_USER_SHELL=/bin/sh
