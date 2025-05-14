@@ -1,0 +1,128 @@
+diff '--color=auto' -ur a/bin/control.sh b/bin/control.sh
+--- a/bin/control.sh	2025-03-18 02:33:08.000000000 +0100
++++ b/bin/control.sh	2025-04-01 22:28:31.008520784 +0200
+@@ -22,13 +22,13 @@
+ PROPERTY_DIR="${OMADA_HOME}/properties"
+ AUTOBACKUP_DIR="${DATA_DIR}/autobackup"
+ 
+-JRE_HOME="$( readlink -f "$( which java )" | sed "s:bin/.*$::" )"
++JRE_HOME="$( /usr/bin/java-config --jre-home )"
+ JAVA_TOOL="${JRE_HOME}/bin/java"
+ JAVA_OPTS="-server -XX:MaxHeapFreeRatio=60 -XX:MinHeapFreeRatio=30  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${LOG_DIR}/java_heapdump.hprof -Djava.awt.headless=true"
+ MAIN_CLASS="com.tplink.smb.omada.starter.OmadaLinuxMain"
+ STARTUP_INFO_PATH="${OMADA_HOME}/data/startupInfo"
+ 
+-OMADA_USER=${OMADA_USER:-root}
++OMADA_USER=${OMADA_USER:-omada}
+ OMADA_GROUP=$(id -gn ${OMADA_USER})
+ 
+ PID_FILE="/var/run/${NAME}.pid"
+@@ -172,7 +172,7 @@
+ 
+     # check if ${OMADA_USER} has the permission to ${DATA_DIR} ${LOG_DIR} ${WORK_DIR}
+     [ "root" != ${OMADA_USER} ] && {
+-        echo "check ${OMADA_USER}"
++        # echo "check ${OMADA_USER}"
+         check_omada_user
+     }
+ 
+diff '--color=auto' -ur a/install.sh b/install.sh
+--- a/install.sh	2025-03-18 02:33:08.000000000 +0100
++++ b/install.sh	2025-04-01 22:19:15.056521115 +0200
+@@ -2,18 +2,19 @@
+ NAME="omada"
+ DESC="Omada Controller"
+ 
+-DEST_DIR=/opt/tplink
+-DEST_FOLDER=EAPController
++PREFIX_DIR=$1
++DEST_DIR=${PREFIX_DIR}/opt
++DEST_FOLDER=OmadaController
+ INSTALLDIR=${DEST_DIR}/${DEST_FOLDER}
+ DATA_DIR="${INSTALLDIR}/data"
+-LINK=/etc/init.d/tpeap
+-LINK_CMD=/usr/bin/tpeap
+-CLUSTER_LINK_CMD=/usr/bin/omadacluster
++LINK=${PREFIX_DIR}/etc/init.d/tpeap
++LINK_CMD=${PREFIX_DIR}/usr/bin/tpeap
++CLUSTER_LINK_CMD=${PREFIX_DIR}/usr/bin/omadacluster
+ 
+ CLUSTER_DIR="${DATA_DIR}/cluster"
+ BACKUP_DIR=${INSTALLDIR}/../omada_db_backup
+ DB_FILE_NAME=omada.db.tar.gz
+-INSTALL_PARAM=$1
++INSTALL_PARAM="-y"
+ CONSULT_IMPORT_DB=1
+ INIT_CLUSTER=0
+ 
+@@ -212,14 +213,14 @@
+   JRE_HOME="$( readlink -f "$( which java )" | sed "s:bin/.*$::" )"
+   (version_gt "${JAVA_VERSION}" "1.9") && (version_lt "${JSVC_VERSION}" "1.1.0") && [ ! -d "${JRE_HOME}/lib/amd64" ] && {
+     echo "JRE ${JAVA_VERSION} is greater than 8 and JSVC ${JSVC_VERSION} is less than 1.1.0"
+-    mkdir ${JRE_HOME}/lib/amd64
+-    ln -s ${JRE_HOME}/lib/server ${JRE_HOME}/lib/amd64/
++#    mkdir ${JRE_HOME}/lib/amd64
++#    ln -s ${JRE_HOME}/lib/server ${JRE_HOME}/lib/amd64/
+   }
+ }
+ 
+ # parameter check
+ if [[ $# != 0 ]] ; then
+-    if [[ $# != 1 || $1 != "init-cluster-mode" || $1 == "help" ]] ; then
++    if [[ $# != 1 || $1 == "help" ]] ; then
+         help
+         exit
+     fi
+@@ -280,26 +281,27 @@
+     cluster_link_cmd_name=${CLUSTER_LINK_CMD}
+ fi
+ 
++# chmod 755
++chmod 755 ${INSTALLDIR}/bin/*
+ 
+ 
+-ln -s ${INSTALLDIR}/bin/control.sh ${link_name}
+-ln -s ${INSTALLDIR}/bin/control.sh ${link_cmd_name}
+-ln -s ${INSTALLDIR}/bin/cluster_control.sh ${cluster_link_cmd_name}
++#ln -sf ${INSTALLDIR}/bin/control.sh ${link_name}
++ln -sf /opt/${DEST_FOLDER}/bin/control.sh ${link_cmd_name}
++ln -sf /opt/${DEST_FOLDER}/bin/cluster_control.sh ${cluster_link_cmd_name}
+ ln -sf $(which mongod) ${INSTALLDIR}/bin/mongod
+ 
+ 
+-# chmod 755
+-chmod 755 ${INSTALLDIR}/bin/*
+-
+-if test -x ${link_name}; then
++if test -x ${link_cmd_name}; then
+     update-rc.d $(basename ${link_name}) defaults 2>/dev/null
+     result=$?
+-    if [ $result -ne 0 ]; then
+-        chkconfig --add ${link_name}
+-        chkconfig --add ${link_cmd_name}
+-        chkconfig --add ${cluster_link_cmd_name}
++#    if [ $result -ne 0 ]; then
++        #chkconfig --add ${link_name}
++        #chkconfig --add ${link_cmd_name}
++        #chkconfig --add ${cluster_link_cmd_name}
+ #       echo "add service with chkconfig"
+-    fi
++#    fi
++
++    rm ${INSTALLDIR}/bin/topdf
+ 
+     echo "Install ${DESC} succeeded!"
+     echo "=========================="
+@@ -312,9 +314,9 @@
+         echo "Before enabling the cluster mode, first configure the system environment by referring to the Cluster UG(https://www.omadanetworks.com/support/faq/4347/). Then please edit the properties file that specifies the cluster mode in directory ${CLUSTER_DIR} and use command 'sudo omadacluster -config <properties_path> -node <node_name> init' to initialize the cluster node."
+         echo "Controllers that have not completed cluster initialization will still start in normal mode."
+         ${cluster_link_cmd_name} help
+-    else
+-        echo "${DESC} will start up with system boot. You can also control it by [${link_cmd_name}]. "
+-        ${link_name} start
++#    else
++#        echo "${DESC} will start up with system boot. You can also control it by [${link_cmd_name}]. "
++#        ${link_name} start
+     fi
+     echo "========================"
+     exit
