@@ -7,7 +7,7 @@ DESCRIPTION="Omada Software Controller"
 HOMEPAGE="https://support.omadanetworks.com/pl/product/omada-software-controller/"
 SRC_URI="https://static.tp-link.com/upload/software/2025/202503/20250321/${PN}_v${PV}_linux_x64.tar.gz"
 
-LICENSE="GPL"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 IUSE=""
