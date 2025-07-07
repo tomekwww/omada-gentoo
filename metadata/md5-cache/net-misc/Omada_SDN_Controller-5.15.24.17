@@ -7,5 +7,5 @@ LICENSE=GPL-3
 RDEPEND=>=virtual/jre-1.17:* dev-db/mongodb net-misc/curl dev-java/commons-daemon acct-user/omada acct-group/omada
 RESTRICT=test strip
 SLOT=0
-SRC_URI=https://static.tp-link.com/upload/software/2025/202503/20250331/Omada_SDN_Controller_v5.15.20.18_linux_x64.tar.gz
-_md5_=24eadb8d72c0cef6359d8bf6883d119c
+SRC_URI=https://static.tp-link.com/upload/software/2025/202506/20250618/Omada_SDN_Controller_v5.15.24.17_linux_x64_20250613204459.tar.gz
+_md5_=0ec3bdf7ce6fe61209c7561722fb7eb8
