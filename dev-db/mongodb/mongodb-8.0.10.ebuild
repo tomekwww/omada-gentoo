@@ -50,6 +50,7 @@ DEPEND="${RDEPEND}
 	sys-libs/readline:0=
 	debug? ( dev-debug/valgrind )"
 BDEPEND="
+	<sys-devel/gcc-15
 	$(python_gen_any_dep '
 		>=dev-build/scons-3.1.1[${PYTHON_USEDEP}]
 		dev-python/cheetah3[${PYTHON_USEDEP}]

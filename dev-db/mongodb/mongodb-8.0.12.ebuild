@@ -50,6 +50,7 @@ DEPEND="${RDEPEND}
 	sys-libs/readline:0=
 	debug? ( dev-debug/valgrind )"
 BDEPEND="
+	<sys-devel/gcc-15
 	$(python_gen_any_dep '
 		>=dev-build/scons-3.1.1[${PYTHON_USEDEP}]
 		dev-python/cheetah3[${PYTHON_USEDEP}]
@@ -68,13 +69,13 @@ PDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-4.4.29-no-enterprise.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-5.0.2-no-compass.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-7.0.2-sconstruct.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-8.0.6-skip-reqs-check.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-8.0.6-fixes-for-boost-1.85.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-8.0.4-scons.patch"
-	"${FILESDIR}/mongodb-8.0.10-patches/${PN}-8.0.6-use-tenacity.patch"
+	"${FILESDIR}/${P}-patches/${PN}-4.4.29-no-enterprise.patch"
+	"${FILESDIR}/${P}-patches/${PN}-5.0.2-no-compass.patch"
+	"${FILESDIR}/${P}-patches/${PN}-7.0.2-sconstruct.patch"
+	"${FILESDIR}/${P}-patches/${PN}-8.0.6-skip-reqs-check.patch"
+	"${FILESDIR}/${P}-patches/${PN}-8.0.6-fixes-for-boost-1.85.patch"
+	"${FILESDIR}/${P}-patches/${PN}-8.0.4-scons.patch"
+	"${FILESDIR}/${P}-patches/${PN}-8.0.6-use-tenacity.patch"
 )
 
 python_check_deps() {
