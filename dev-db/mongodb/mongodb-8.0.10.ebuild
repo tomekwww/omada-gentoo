@@ -10,6 +10,9 @@ CHECKREQS_DISK_BUILD="2400M"
 CHECKREQS_DISK_USR="512M"
 CHECKREQS_MEMORY="1024M"
 
+CC="/usr/bin/gcc-14"
+CXX="/usr/bin/g++-14"
+
 inherit check-reqs eapi9-ver flag-o-matic multiprocessing pax-utils python-any-r1 scons-utils systemd toolchain-funcs
 
 MY_PV=r${PV/_rc/-rc}
@@ -111,6 +114,7 @@ pkg_pretend() {
 }
 
 src_prepare() {
+	tc-export CC CXX
 	default
 	# remove bundled libs
 	rm -r src/third_party/{boost,snappy,yaml-cpp} || die

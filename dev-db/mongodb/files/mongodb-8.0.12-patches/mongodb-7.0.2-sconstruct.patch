@@ -19,6 +19,8 @@ diff --git a/SConstruct2 b/SConstruct
 index e9aa2ca..5814f4a 100644
 --- a/SConstruct2
 +++ b/SConstruct
+ if get_option("build-metrics"):
+     env["BUILD_METRICS_ARTIFACTS_DIR"] = "$BUILD_ROOT/$VARIANT_DIR"
 @@ -3123,7 +3123,7 @@ if env.TargetOSIs('posix'):
      env.Append(
          CCFLAGS=[
@@ -221,3 +223,12 @@ index e9aa2ca..5814f4a 100644
      if mongoc_mode != 'off':
          if conf.CheckLibWithHeader(
              ["mongoc-1.0"],
+@@ -5657,7 +5657,7 @@
+ 
+             with open(variables_file, "r") as file:
+                 data = file.read()
+-                pattern = "exec\\(open\\(['\"](.*)['\"]\, ['\"][a-z]+['\"]\\).read\\(\\)\\)"
++                pattern = "exec\\(open\\(['\"](.*)['\"], ['\"][a-z]+['\"]\\).read\\(\\)\\)"
+                 nested_files = re.findall(pattern, data)
+                 for file_name in nested_files:
+                     variable_files.extend(find_nested_variable_files(file_name))
